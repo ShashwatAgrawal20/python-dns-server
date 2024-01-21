@@ -1,5 +1,5 @@
 import socket
-from core import bind_connection, DNSHeader
+from core import bind_connection, DNSHeader, DNSQuestion, DNSMessage
 
 
 def main():
@@ -12,9 +12,9 @@ def main():
             # Dns Packet are only limited to 512 bytes
             buf, source = udp_socket.recvfrom(512)
             # print(f"Received data from {source}")
-            response = DNSHeader(
-                6969, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)\
-                .pack_header_to_bytes()
+            header = DNSHeader(ID=69, QDCOUNT=1)
+            question = DNSQuestion(QNAME="google.com")
+            response = DNSMessage(header, question).pack_message_to_bytes()
 
             udp_socket.sendto(response, source)
         except Exception as e:

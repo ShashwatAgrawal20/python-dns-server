@@ -27,19 +27,19 @@ class DNSHeader:
     - `pack_header_to_bytes`: Method to pack the DNS header into bytes.
     """
 
-    ID: int
-    QR: int
-    OPCODE: int
-    AA: int
-    TC: int
-    RD: int
-    RA: int
-    Z: int
-    RCODE: int
-    QDCOUNT: int
-    ANCOUNT: int
-    NSCOUNT: int
-    ARCOUNT: int
+    ID: int = 69
+    QR: int = 1
+    OPCODE: int = 0
+    AA: int = 0
+    TC: int = 0
+    RD: int = 0
+    RA: int = 0
+    Z: int = 0
+    RCODE: int = 0
+    QDCOUNT: int = 0
+    ANCOUNT: int = 0
+    NSCOUNT: int = 0
+    ARCOUNT: int = 0
 
     def __post_init__(self) -> None:
         """
