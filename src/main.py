@@ -9,6 +9,7 @@ def main():
 
     while True:
         try:
+            # Dns Packet are only limited to 512 bytes
             buf, source = udp_socket.recvfrom(512)
             # print(f"Received data from {source}")
             response = DNSHeader(

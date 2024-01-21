@@ -5,21 +5,28 @@ from struct import pack
 @dataclass
 class DNSHeader:
     """
-    Parameters:
-    - ID : ID to be set in the DNS header.
-    - OR : A flag to indicate if the message is a query or a response.
-    - OPCODE : A four bit field that specifies kind of query in this message.
-    - AA : Authoritative Answer.
-    - TC : Truncation flag.
-    - RD : Recursion Desired.
-    - RA : Recursion Available.
-    - Z : Reserved for future use. Must be zero in all queries and responses.
-    - RCODE : Response code.
-    - QDCOUNT : An unsigned 16 bit integer specifying the number of entries in the question section.
-    - ANCOUNT : An unsigned 16 bit integer specifying the number of resource records in the answer section.
-    - NSCOUNT : An unsigned 16 bit integer specifying the number of name server resource records in the authority records section.
-    - ARCOUNT : An unsigned 16 bit integer specifying the number of resource records in the additional records section.
+    Represents the header of a DNS (Domain Name System) message.
+
+    More information about the DNS header can be found at:
+    - [RFC 1035](https://datatracker.ietf.org/doc/html/rfc1035#section-4.1.1)
+    - [Wiki](https://en.wikipedia.org/wiki/Domain_Name_System)
+
+    Note:
+    The QR, OPCODE, AA, TC, RD, RA, Z, and RCODE attributes form the FLAGS.
+    Use the `pack_header_to_bytes` method to get the packed DNS header.
+
+    Example Usage:
+    ```
+    dns_header = DNSHeader(ID=12345, QR=0, OPCODE=1, AA=0, TC=0, RD=1, RA=1,
+                           Z=0, RCODE=0, QDCOUNT=1, ANCOUNT=2, NSCOUNT=0,
+                           ARCOUNT=1)
+    packed_header = dns_header.pack_header_to_bytes()
+    ```
+
+    See Also:
+    - `pack_header_to_bytes`: Method to pack the DNS header into bytes.
     """
+
     ID: int
     QR: int
     OPCODE: int
@@ -36,6 +43,8 @@ class DNSHeader:
 
     def __post_init__(self) -> None:
         """
+        Initializes the DNS header flags based on individual attributes.
+
         ## Header Flags Format
                                         1  1  1  1  1  1
           0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
@@ -43,12 +52,18 @@ class DNSHeader:
         |QR|   Opcode  |AA|TC|RD|RA|   Z    |   RCODE   |
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
 
-        Making 16-bit Header flags which will be used in the pack method
-        Using bitwise operators to properly set the flags
+        Using bitshifting and bitwise(|) operator to construct the header flag.
 
-        Check the pack method for looking at the whole header format
+        The resulting 16-bit value is assigned to the FLAGS attribute, which
+        represents the combined header flags.
+
+        Check the `pack_header_to_bytes` method for complete DNS header format.
+
+        Note:
+        This method is automatically called after the object is initialized
+        to ensure proper initialization of the FLAGS attribute.
         """
-        print("__post_init__ called")
+
         self.FLAGS = (
             (self.QR << 15)
             | (self.OPCODE << 11)
@@ -62,7 +77,10 @@ class DNSHeader:
 
     def pack_header_to_bytes(self) -> bytes:
         """
-        ## Header Format
+        Packs DNS header fields into a 12-byte structure and returns the result
+        as bytes.
+
+        The DNS header follows the format:
                                         1  1  1  1  1  1
           0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
@@ -79,10 +97,12 @@ class DNSHeader:
         |                    ARCOUNT                    |
         +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
 
-        Packing the header into bytes using the pack method from struct module
+        Packing is done using the big-endian format with the struct.pack method
 
-        Using the big-endian format to pack the header
+        Returns:
+            12 bytes packed DNS header
         """
+
         return pack(
             ">HHHHHH",
             self.ID,
