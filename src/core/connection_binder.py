@@ -1,3 +1,6 @@
+"""Module to create DNS header section for DNS messages."""
+
+
 def bind_connection(upd_socket, ip, port) -> None:
     """
     Bind the connection to the specified ip and port.
@@ -11,4 +14,4 @@ def bind_connection(upd_socket, ip, port) -> None:
         upd_socket.bind((ip, port))
     except Exception as e:
         print("Error: ", e)
-        exit(1)
+        raise e

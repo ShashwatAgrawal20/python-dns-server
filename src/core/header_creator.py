@@ -1,3 +1,6 @@
+"""Module to create DNS header section for DNS messages."""
+
+
 from dataclasses import dataclass
 from struct import pack
 
@@ -17,9 +20,9 @@ class DNSHeader:
 
     Example Usage:
     ```
-    dns_header = DNSHeader(ID=12345, QR=0, OPCODE=1, AA=0, TC=0, RD=1, RA=1,
-                           Z=0, RCODE=0, QDCOUNT=1, ANCOUNT=2, NSCOUNT=0,
-                           ARCOUNT=1)
+    dns_header = DNSHeader(id=12345, qr=0, opcode=1, aa=0, tc=0, rd=1, ra=1,
+                           z=0, rcode=0, qdcount=1, ancount=2, nscount=0,
+                           arcount=1)
     packed_header = dns_header.pack_header_to_bytes()
     ```
 
@@ -27,19 +30,20 @@ class DNSHeader:
     - `pack_header_to_bytes`: Method to pack the DNS header into bytes.
     """
 
-    ID: int = 69
-    QR: int = 1
-    OPCODE: int = 0
-    AA: int = 0
-    TC: int = 0
-    RD: int = 0
-    RA: int = 0
-    Z: int = 0
-    RCODE: int = 0
-    QDCOUNT: int = 0
-    ANCOUNT: int = 0
-    NSCOUNT: int = 0
-    ARCOUNT: int = 0
+    # pylint: disable=too-many-instance-attributes
+    id: int = 69
+    qr: int = 1
+    opcode: int = 0
+    aa: int = 0
+    tc: int = 0
+    rd: int = 0
+    ra: int = 0
+    z: int = 0
+    rcode: int = 0
+    qdcount: int = 0
+    ancount: int = 0
+    nscount: int = 0
+    arcount: int = 0
 
     def __post_init__(self) -> None:
         """
@@ -64,15 +68,15 @@ class DNSHeader:
         to ensure proper initialization of the FLAGS attribute.
         """
 
-        self.FLAGS = (
-            (self.QR << 15)
-            | (self.OPCODE << 11)
-            | (self.AA << 10)
-            | (self.TC << 9)
-            | (self.RD << 8)
-            | (self.RA << 7)
-            | (self.Z << 4)
-            | self.RCODE
+        self.flags = (
+            (self.qr << 15)
+            | (self.opcode << 11)
+            | (self.aa << 10)
+            | (self.tc << 9)
+            | (self.rd << 8)
+            | (self.ra << 7)
+            | (self.z << 4)
+            | self.rcode
         )
 
     def pack_header_to_bytes(self) -> bytes:
@@ -105,10 +109,10 @@ class DNSHeader:
 
         return pack(
             ">HHHHHH",
-            self.ID,
-            self.FLAGS,
-            self.QDCOUNT,
-            self.ANCOUNT,
-            self.NSCOUNT,
-            self.ARCOUNT,
+            self.id,
+            self.flags,
+            self.qdcount,
+            self.ancount,
+            self.nscount,
+            self.arcount,
         )

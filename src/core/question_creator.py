@@ -1,5 +1,9 @@
+"""Module to create DNS answer section for DNS messages. """
+
+
 from dataclasses import dataclass
 from struct import pack
+from utils import encode_name
 
 
 @dataclass
@@ -30,27 +34,9 @@ class DNSQuestion:
         *QCLASS:* A two octet code that specifies the class of the query.
     """
 
-    QNAME: str = "google.com"
-    QTYPE: int = 1
-    QCLASS: int = 1
-
-    def parse_QNAME(self):
-        """
-        Parses the QNAME attribute into a sequence of labels.
-
-        Example:
-            google.com -> \x06google\x03com\x00
-
-        Returns:
-            A sequence of bytes
-        """
-
-        name = self.QNAME
-        encoded_domain = ""
-        for part in name.split("."):
-            encoded_domain += chr(len(part)) + part
-        encoded_domain += "\x00"
-        return encoded_domain.encode()
+    qname: str = "google.com"
+    qtype: int = 1
+    qclass: int = 1
 
     def pack_question_to_bytes(self) -> bytes:
         """
@@ -73,5 +59,5 @@ class DNSQuestion:
             are 2 bytes long, but the QNAME is of variable length.
         """
 
-        encoded_domain = self.parse_QNAME()
-        return encoded_domain + pack(">HH", self.QTYPE, self.QCLASS)
+        encoded_domain = encode_name(self.qname)
+        return encoded_domain + pack(">HH", self.qtype, self.qclass)
