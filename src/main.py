@@ -20,7 +20,7 @@ def main():
             # Dns Packet are only limited to 512 bytes
             buf, source = udp_socket.recvfrom(512)
             # print(f"Received data from {source}")
-            header = DNSHeader(id=69, qdcount=1, ancount=1)
+            header = DNSHeader.parse_header(buf)
             question = DNSQuestion(qname="google.com")
             answer = DNSAnswer(name="google.com", data=b"\x08\x08\x08\x08")
             response = DNSMessage(
