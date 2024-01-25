@@ -1,8 +1,8 @@
 """A shitty DNS server."""
 import socket
 from core import bind_connection
-from core import DNSQuestion, DNSMessage, DNSAnswer
-from utils import header_parser
+from core import DNSMessage, DNSAnswer
+from utils import header_parser, question_parser
 
 
 def main():
@@ -22,8 +22,8 @@ def main():
             buf, source = udp_socket.recvfrom(512)
             # print(f"Received data from {source}")
             header = header_parser(buf)
-            question = DNSQuestion(qname="google.com")
-            answer = DNSAnswer(name="google.com", data=b"\x08\x08\x08\x08")
+            question = question_parser(buf)
+            answer = DNSAnswer(question.qname, data=b"\x08\x08\x08\x08")
             response = DNSMessage(
                 header, question, answer).pack_message_to_bytes()
 

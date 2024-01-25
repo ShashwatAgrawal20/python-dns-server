@@ -3,7 +3,6 @@
 
 from dataclasses import dataclass
 from struct import pack
-from utils import encode_name
 
 
 @dataclass
@@ -41,7 +40,7 @@ class DNSAnswer:
     /                                               /
     +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     """
-    name: str = "google.com"
+    name: bytes = b"\x06google\x03com\x00"
     type_: int = 1
     class_: int = 1
     ttl: int = 69
@@ -51,7 +50,7 @@ class DNSAnswer:
     def pack_answer_to_bytes(self) -> bytes:
         """Pack the DNS answer to bytes."""
         return (
-            encode_name(self.name)
+            self.name
             + pack(">HHIH", self.type_, self.class_, self.ttl, self.length)
             + self.data
         )

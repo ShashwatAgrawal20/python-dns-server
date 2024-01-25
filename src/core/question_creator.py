@@ -3,7 +3,6 @@
 
 from dataclasses import dataclass
 from struct import pack
-from utils import encode_name
 
 
 @dataclass
@@ -34,7 +33,7 @@ class DNSQuestion:
         *QCLASS:* A two octet code that specifies the class of the query.
     """
 
-    qname: str = "google.com"
+    qname: bytes = b"\x06google\x03com\x00"
     qtype: int = 1
     qclass: int = 1
 
@@ -59,5 +58,4 @@ class DNSQuestion:
             are 2 bytes long, but the QNAME is of variable length.
         """
 
-        encoded_domain = encode_name(self.qname)
-        return encoded_domain + pack(">HH", self.qtype, self.qclass)
+        return self.qname + pack(">HH", self.qtype, self.qclass)
