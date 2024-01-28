@@ -32,19 +32,19 @@ class DNSHeader:
     """
 
     # pylint: disable=too-many-instance-attributes
-    id: int = 69
-    qr: int = 1
-    opcode: int = 0
-    aa: int = 0
-    tc: int = 0
-    rd: int = 0
-    ra: int = 0
-    z: int = 0
-    rcode: int = 0
-    qdcount: int = 1
-    ancount: int = 1
-    nscount: int = 0
-    arcount: int = 0
+    id: int
+    qr: int
+    opcode: int
+    aa: int
+    tc: int
+    rd: int
+    ra: int
+    z: int
+    rcode: int
+    qdcount: int
+    ancount: int
+    nscount: int
+    arcount: int
 
     def __post_init__(self) -> None:
         """

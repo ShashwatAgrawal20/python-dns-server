@@ -40,12 +40,12 @@ class DNSAnswer:
     /                                               /
     +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     """
-    name: bytes = b"\x06google\x03com\x00"
-    type_: int = 1
-    class_: int = 1
-    ttl: int = 69
-    length: int = 4
-    data: bytes = "\x08\x08\x08\x08"
+    name: bytes
+    type_: int
+    class_: int
+    ttl: int
+    length: int
+    data: bytes
 
     def pack_answer_to_bytes(self) -> bytes:
         """Pack the DNS answer to bytes."""

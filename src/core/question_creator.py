@@ -33,9 +33,9 @@ class DNSQuestion:
         *QCLASS:* A two octet code that specifies the class of the query.
     """
 
-    qname: bytes = b"\x06google\x03com\x00"
-    qtype: int = 1
-    qclass: int = 1
+    qname: bytes
+    qtype: int
+    qclass: int
 
     def pack_question_to_bytes(self) -> bytes:
         """

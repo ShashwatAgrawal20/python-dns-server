@@ -1,12 +1,14 @@
-"""Module to parse question section and return a DNSHeader."""
+"""Module to parse question section and return a DNSQuestion."""
 
-from core import DNSQuestion
 from struct import unpack
+from typing import Tuple
+from core import DNSQuestion
+from common_module import extract_name
 
 
-def question_parser(buffer: bytes) -> DNSQuestion | None:
+def question_parser(buffer: bytes) -> Tuple[DNSQuestion, int]:
     """
-    Parses the DNS header from the given buffer.
+    Parses the DNS question from the given buffer.
 
     Args:
         buffer (bytes): Buffer containing the DNS header.
@@ -14,11 +16,15 @@ def question_parser(buffer: bytes) -> DNSQuestion | None:
     Returns:
         DNSQuestion: DNS question object containing the parsed question fields.
     """
-    if not (buffer[12:]):
+    if not buffer[12:]:
         raise ValueError("Where's the question?")
-    buffer = buffer[12:]
-    domain_end = buffer.index(b"\x00")
-    domain = buffer[:domain_end + 1]
+    offset = 12
+    name, name_end = extract_name(buffer, offset)
+    # print(name)
     qtype, qclass = unpack(
-        ">HH", buffer[domain_end + 1: domain_end + 5])
-    return DNSQuestion(domain, qtype, qclass)
+        ">HH", buffer[offset + name_end +
+                      1: offset + name_end + 5]
+    )
+    offset += name_end + 5
+    question = DNSQuestion(qname=name, qtype=qtype, qclass=qclass)
+    return (question, offset)
